@@ -1,0 +1,50 @@
+<!doctype html>
+
+<html>
+
+<head>
+    <script type="text/javascript" src="script.js"></script>
+</head>
+
+<body>
+<script type="text/javascript">
+    // histogram 1
+    ([1, 2, 2, 2, 3, 3, 4, 5]).draw();
+
+    // histogram 2
+    (["a", "b", "a", "c", "d", "d", "d", "a"]).draw();
+
+    // scatter plot
+    ([
+        {x: 10, y: 10, r: 37},
+        {x: 20, y: 11.2, r: 2},
+        {x: 22, y: 31, r: 17},
+        {x: 40, y: 5.7, r: 11},
+        {x: 32, y: 11, r: 28}
+    ]).draw();
+
+    // line chart
+    ({
+        1: [1, 12, 3],
+        4: [12, 31, 4, 15],
+        5: [3, 24, null, 15, -10],
+        6: [12, 17, 6, null, -15],
+        12: [8, 2, 9, 22],
+        13: [21, 34, 6, 2, 10],
+        21: [6, 7, 8, 5]
+    }).draw();
+
+    // stacked bar chart
+    ([
+        ["jan", 1, 4, 5, 6],
+        ["jan", 2, 3, 5, 6],
+        ["jan", 3, 10, 11],
+        ["mar", 4, 9, 7, 10],
+        ["may", 3, 10, 8, 1],
+        ["sep", 11, 1, 9, 0]
+    ]).draw();
+
+</script>
+</body>
+
+</html>
