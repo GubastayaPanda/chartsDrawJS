@@ -174,17 +174,17 @@ Object.prototype.draw = function(){
               if (canvas.focusedBar >= 0) {
                   canvas.removeAttribute('title');
                   barDraw(figures[canvas.focusedBar].x, figures[canvas.focusedBar].y,
-                      figures[canvas.focusedBar].w, figures[canvas.focusedBar].h, 'rgba(0, 0, 255, 0.5)');
+                      figures[canvas.focusedBar].w, figures[canvas.focusedBar].h, colorsRGBA[canvas.focusedBar % colorsRGBA.length] + '0.5)');
               }
               canvas.focusedBar = -1;
           }
           if (bar !== -1 && bar !== canvas.focusedBar) {
               if (canvas.focusedBar >= 0) {
                   barDraw(figures[canvas.focusedBar].x, figures[canvas.focusedBar].y,
-                      figures[canvas.focusedBar].w, figures[canvas.focusedBar].h, 'rgba(0, 0, 255, 0.5)');
+                      figures[canvas.focusedBar].w, figures[canvas.focusedBar].h, colorsRGBA[canvas.focusedBar % colorsRGBA.length] + '0.5)');
               }
 
-              barDraw(figures[bar].x + 1, figures[bar].y, figures[bar].w - 2, figures[bar].h, 'rgba(0, 0, 255, 1)');
+              barDraw(figures[bar].x + 1, figures[bar].y, figures[bar].w - 2, figures[bar].h, colorsRGBA[bar % colorsRGBA.length] + '1)');
               canvas.setAttribute('title', 'name: ' + figures[bar].name + '\nvalue: ' + figures[bar].value);
               canvas.focusedBar = bar;
           }
@@ -192,7 +192,7 @@ Object.prototype.draw = function(){
           if (canvas.focusedBar >= 0) {
               canvas.removeAttribute('title');
               barDraw(figures[canvas.focusedBar].x, figures[canvas.focusedBar].y,
-                  figures[canvas.focusedBar].w, figures[canvas.focusedBar].h, 'rgba(0, 0, 255, 0.5)');
+                  figures[canvas.focusedBar].w, figures[canvas.focusedBar].h, colorsRGBA[canvas.focusedBar % colorsRGBA.length] + '0.5)');
               canvas.focusedBar = -1;
           }
       }
@@ -203,7 +203,7 @@ Object.prototype.draw = function(){
           canvas.removeAttribute('title');
           let figures = canvas.figureLocation;
           barDraw(figures[canvas.focusedBar].x, figures[canvas.focusedBar].y,
-              figures[canvas.focusedBar].w, figures[canvas.focusedBar].h, 'rgba(0, 0, 255, 0.5)');
+              figures[canvas.focusedBar].w, figures[canvas.focusedBar].h, colorsRGBA[canvas.focusedBar % colorsRGBA.length] + '0.5)');
           canvas.focusedBar = -1;
       }
   }
@@ -231,7 +231,7 @@ Object.prototype.draw = function(){
                     y: canvas.height - margin.bottom - combinedData[cursor] * scale.y,
                     w: plotDistance - 2,
                     h: combinedData[cursor] * scale.y,
-                    color: 'rgba(0, 0, 255, 0.5)',
+                    color: colorsRGBA[count % colorsRGBA.length] + '0.5)',
                     name: cursor,
                     value: combinedData[cursor]
                 };
@@ -590,6 +590,21 @@ Object.prototype.draw = function(){
     }
 
 
+  function resizeCanvas() {
+      canvas.height = canvas.offsetHeight;
+      canvas.width = canvas.offsetWidth;
+      if (canvas.className === 'histogram') {
+          simpleHistogram();
+      } else if (canvas.className === 'scatter plot') {
+          scatterChart();
+      } else if (canvas.className === 'stacked bar chart') {
+          stackedBarChart();
+      } else if (canvas.className === 'line chart') {
+          lineChart();
+      }
+  }
+
+
   let data = this,
       canvas = document.createElement('canvas'),
       ctx = canvas.getContext('2d'),
@@ -614,16 +629,14 @@ Object.prototype.draw = function(){
       case 5:
           canvas.style.width = '100%';
           canvas.style.height = '34%';
-          canvas.height = canvas.offsetHeight;
-          canvas.width = canvas.offsetWidth;
           break;
       default:
           canvas.style.width = '50%';
           canvas.style.height = '33%';
-          canvas.height = canvas.offsetHeight;
-          canvas.width = canvas.offsetWidth;
           break;
   }
+
+  resizeCanvas();
 
   if (Array.isArray(data)) {
       if (typeof data[0] !== 'object') {
@@ -636,7 +649,7 @@ Object.prototype.draw = function(){
   } else if (typeof data === 'object') {
       lineChart();
   }
-  
+
   // Попытка определить тип диаграммы по типу данных крайне наивна, и даст
   // сбой при первой же возможности. Рекомендуется потратить ещё некоторое
   // время на доработку кода, и требовать передачу параметров в метод draw().
@@ -654,6 +667,8 @@ Object.prototype.draw = function(){
         canvas.onmousemove = lineChartRedraw;
         canvas.onmouseleave = lineChartDraw;
     }
+
+  window.addEventListener('resize', resizeCanvas);
 
   return {data: data, canvas:canvas};
 };
